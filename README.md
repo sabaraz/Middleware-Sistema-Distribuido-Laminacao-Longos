@@ -11,9 +11,7 @@ comandar; um cliente de terminal acompanha e age.
 Inspirado na laminação de perfis estruturais da Gerdau Ouro Branco. Tudo é
 simulado; nenhum dado da empresa é usado.
 
-O documento final é [docs/relatorio.pdf](docs/relatorio.pdf). Ele é gerado a
-partir de [docs/relatorio.md](docs/relatorio.md) com `python docs/gerar_pdf.py`,
-que busca os trechos de código nos arquivos reais do projeto.
+A Documentação do Trabalho se encontra em [docs/relatorio.pdf](docs/relatorio.pdf).
 
 ## Requisitos
 
