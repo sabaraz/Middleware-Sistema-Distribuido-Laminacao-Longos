@@ -21,8 +21,6 @@ A Documentação do Trabalho se encontra em [docs/relatorio.pdf](docs/relatorio.
 ## Preparação
 
 ```
-python -m venv .venv
-.venv\Scripts\activate
 pip install -r requirements.txt
 docker compose up -d
 ```
