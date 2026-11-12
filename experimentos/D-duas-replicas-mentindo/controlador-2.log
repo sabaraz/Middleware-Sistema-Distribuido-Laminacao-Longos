@@ -1,0 +1,13 @@
+2026-11-12 20:33:35,110 UTC [controlador-2] MODO DE TESTE: replica defeituosa (mentir)
+2026-11-12 20:33:35,129 UTC [controlador-2] conectado ao broker; assinando laminacao/cadeira/+/cilindro/+/temperatura
+2026-11-12 20:33:37,173 UTC [controlador-2] recuperacao: controlador-1 sem resposta
+2026-11-12 20:33:39,230 UTC [controlador-2] recuperacao: controlador-3 sem resposta
+2026-11-12 20:33:39,231 UTC [controlador-2] recuperacao: nenhuma colega respondeu; seguindo com o proprio armazenamento
+2026-11-12 20:33:39,236 UTC [controlador-2] objeto remoto disponivel em PYRO:controlador@localhost:9092
+2026-11-12 20:33:43,016 UTC [controlador-2] comando: laminacao/cadeira/1/refrigeracao/comando/2 valor=50
+2026-11-12 20:33:43,021 UTC [controlador-2] comando: laminacao/cadeira/2/refrigeracao/comando/2 valor=50
+2026-11-12 20:33:43,027 UTC [controlador-2] comando: laminacao/cadeira/3/refrigeracao/comando/2 valor=50
+2026-11-12 20:33:43,033 UTC [controlador-2] comando: laminacao/linha/parada/comando/2 valor=0
+2026-11-12 20:33:43,040 UTC [controlador-2] comando: laminacao/linha/alarme/comando/2 valor=0
+2026-11-12 20:34:10,141 UTC [controlador-2] estado: (2, 'superior') normal -> alerta (temperatura=68.8, taxa=2.3)
+2026-11-12 20:34:21,156 UTC [controlador-2] estado: (2, 'superior') alerta -> critico (temperatura=101.8, taxa=3.1)

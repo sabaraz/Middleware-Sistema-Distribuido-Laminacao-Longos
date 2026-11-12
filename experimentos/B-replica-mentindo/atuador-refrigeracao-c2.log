@@ -1,0 +1,8 @@
+2026-11-12 20:30:41,899 UTC [atuador-refrigeracao-c2] conectado ao broker; assinando laminacao/cadeira/2/refrigeracao/comando/+
+2026-11-12 20:30:42,092 UTC [atuador-refrigeracao-c2] comando da replica 2; votos {'2': 50}; sem maioria, mantido o valor 0
+2026-11-12 20:30:42,095 UTC [atuador-refrigeracao-c2] comando da replica 3; votos {'2': 50, '3': 50}; maioria muda o valor 0 -> 50
+2026-11-12 20:30:42,097 UTC [atuador-refrigeracao-c2] comando da replica 1; votos {'2': 50, '3': 50, '1': 50}; maioria confirma o valor 50
+2026-11-12 20:31:09,249 UTC [atuador-refrigeracao-c2] comando da replica 3; votos {'2': 50, '3': 100, '1': 50}; maioria confirma o valor 50
+2026-11-12 20:31:09,251 UTC [atuador-refrigeracao-c2] comando da replica 1; votos {'2': 50, '3': 100, '1': 100}; maioria muda o valor 50 -> 100
+2026-11-12 20:31:42,284 UTC [atuador-refrigeracao-c2] comando da replica 3; votos {'2': 50, '3': 50, '1': 100}; maioria muda o valor 100 -> 50
+2026-11-12 20:31:42,286 UTC [atuador-refrigeracao-c2] comando da replica 1; votos {'2': 50, '3': 50, '1': 50}; maioria confirma o valor 50

@@ -1,0 +1,17 @@
+2026-11-12 20:32:12,905 UTC [atuador-alarme] conectado ao broker; assinando laminacao/linha/alarme/comando/+
+2026-11-12 20:32:12,905 UTC [atuador-alarme] comando da replica 3; votos {'3': 0}; sem maioria, mantido o valor 0
+2026-11-12 20:32:12,906 UTC [atuador-alarme] comando da replica 2; votos {'3': 0, '2': 0}; maioria confirma o valor 0
+2026-11-12 20:32:12,906 UTC [atuador-alarme] comando da replica 1; votos {'3': 0, '2': 0, '1': 0}; maioria confirma o valor 0
+2026-11-12 20:32:39,920 UTC [atuador-alarme] comando da replica 3; votos {'3': 1, '2': 0, '1': 0}; maioria confirma o valor 0
+2026-11-12 20:32:39,921 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 1, '1': 0}; maioria muda o valor 0 -> 1
+2026-11-12 20:32:39,923 UTC [atuador-alarme] comando da replica 1; votos {'3': 1, '2': 1, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:32:40,773 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 0, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:32:45,785 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 1, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:32:50,789 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 0, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:32:55,798 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 1, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:33:00,805 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 0, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:33:05,812 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 1, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:33:10,022 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 0, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:33:15,031 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 1, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:33:20,029 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 0, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:33:25,049 UTC [atuador-alarme] comando da replica 2; votos {'3': 1, '2': 1, '1': 1}; maioria confirma o valor 1

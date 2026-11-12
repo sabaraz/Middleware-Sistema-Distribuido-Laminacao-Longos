@@ -1,0 +1,9 @@
+2026-11-12 20:32:12,839 UTC [atuador-parada] conectado ao broker; assinando laminacao/linha/parada/comando/+
+2026-11-12 20:32:12,841 UTC [atuador-parada] comando da replica 3; votos {'3': 0}; sem maioria, mantido o valor 0
+2026-11-12 20:32:12,841 UTC [atuador-parada] comando da replica 2; votos {'3': 0, '2': 0}; maioria confirma o valor 0
+2026-11-12 20:32:12,842 UTC [atuador-parada] comando da replica 1; votos {'3': 0, '2': 0, '1': 0}; maioria confirma o valor 0
+2026-11-12 20:33:11,962 UTC [atuador-parada] comando da replica 3; votos {'3': 1, '2': 0, '1': 0}; maioria confirma o valor 0
+2026-11-12 20:33:11,962 UTC [atuador-parada] comando da replica 1; votos {'3': 1, '2': 0, '1': 1}; maioria muda o valor 0 -> 1
+2026-11-12 20:33:15,031 UTC [atuador-parada] comando da replica 2; votos {'3': 1, '2': 1, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:33:20,029 UTC [atuador-parada] comando da replica 2; votos {'3': 1, '2': 0, '1': 1}; maioria confirma o valor 1
+2026-11-12 20:33:25,049 UTC [atuador-parada] comando da replica 2; votos {'3': 1, '2': 1, '1': 1}; maioria confirma o valor 1

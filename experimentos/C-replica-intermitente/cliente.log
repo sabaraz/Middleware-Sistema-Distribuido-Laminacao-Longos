@@ -1,0 +1,8 @@
+2026-11-12 20:32:25,787 UTC [cliente] DIVERGENCIA em obter_painel: controlador [3] respondeu diferente da maioria [1, 2]
+2026-11-12 20:32:30,177 UTC [cliente] DIVERGENCIA em obter_painel: controlador [2] respondeu diferente da maioria [1, 3]
+2026-11-12 20:32:31,120 UTC [cliente] DIVERGENCIA em obter_painel: controlador [2] respondeu diferente da maioria [1, 3]
+2026-11-12 20:32:32,062 UTC [cliente] DIVERGENCIA em obter_painel: controlador [2] respondeu diferente da maioria [1, 3]
+2026-11-12 20:32:33,027 UTC [cliente] DIVERGENCIA em obter_painel: controlador [2] respondeu diferente da maioria [1, 3]
+2026-11-12 20:32:33,977 UTC [cliente] DIVERGENCIA em obter_painel: controlador [2] respondeu diferente da maioria [1, 3]
+2026-11-12 20:32:34,924 UTC [cliente] DIVERGENCIA em obter_painel: controlador [2] respondeu diferente da maioria [1, 3]
+2026-11-12 20:33:27,505 UTC [cliente] comparacao: as 3 replicas estao IGUAIS

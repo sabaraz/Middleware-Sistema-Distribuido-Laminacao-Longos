@@ -1,0 +1,5 @@
+2026-11-12 20:33:43,233 UTC [atuador-alarme] conectado ao broker; assinando laminacao/linha/alarme/comando/+
+2026-11-12 20:33:43,234 UTC [atuador-alarme] comando da replica 3; votos {'3': 0}; sem maioria, mantido o valor 0
+2026-11-12 20:33:43,234 UTC [atuador-alarme] comando da replica 2; votos {'3': 0, '2': 0}; maioria confirma o valor 0
+2026-11-12 20:33:43,235 UTC [atuador-alarme] comando da replica 1; votos {'3': 0, '2': 0, '1': 0}; maioria confirma o valor 0
+2026-11-12 20:34:10,160 UTC [atuador-alarme] comando da replica 1; votos {'3': 0, '2': 0, '1': 1}; maioria confirma o valor 0

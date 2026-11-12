@@ -1,0 +1,30 @@
+2026-11-12 20:41:26,275 UTC [sensor-c1-inferior] publicou seq=1 temperatura=60.2
+2026-11-12 20:41:26,276 UTC [sensor-c1-inferior] conectado ao broker
+2026-11-12 20:41:26,327 UTC [sensor-c1-inferior] simulacao: parada = False
+2026-11-12 20:41:26,328 UTC [sensor-c1-inferior] simulacao: valvula = 0
+2026-11-12 20:41:26,328 UTC [sensor-c1-inferior] simulacao: valvula = 50
+2026-11-12 20:41:27,277 UTC [sensor-c1-inferior] publicou seq=2 temperatura=60.3
+2026-11-12 20:41:28,279 UTC [sensor-c1-inferior] publicou seq=3 temperatura=60.0
+2026-11-12 20:41:29,280 UTC [sensor-c1-inferior] publicou seq=4 temperatura=59.9
+2026-11-12 20:41:30,281 UTC [sensor-c1-inferior] publicou seq=5 temperatura=59.7
+2026-11-12 20:41:31,282 UTC [sensor-c1-inferior] publicou seq=6 temperatura=60.0
+2026-11-12 20:41:32,283 UTC [sensor-c1-inferior] publicou seq=7 temperatura=60.0
+2026-11-12 20:41:33,285 UTC [sensor-c1-inferior] publicou seq=8 temperatura=59.9
+2026-11-12 20:41:34,286 UTC [sensor-c1-inferior] publicou seq=9 temperatura=59.6
+2026-11-12 20:41:35,288 UTC [sensor-c1-inferior] publicou seq=10 temperatura=59.8
+2026-11-12 20:41:36,289 UTC [sensor-c1-inferior] publicou seq=11 temperatura=59.9
+2026-11-12 20:41:37,290 UTC [sensor-c1-inferior] publicou seq=12 temperatura=60.0
+2026-11-12 20:41:38,292 UTC [sensor-c1-inferior] publicou seq=13 temperatura=60.1
+2026-11-12 20:41:39,293 UTC [sensor-c1-inferior] publicou seq=14 temperatura=60.1
+2026-11-12 20:41:40,294 UTC [sensor-c1-inferior] publicou seq=15 temperatura=59.9
+2026-11-12 20:41:41,295 UTC [sensor-c1-inferior] publicou seq=16 temperatura=59.6
+2026-11-12 20:41:42,296 UTC [sensor-c1-inferior] publicou seq=17 temperatura=59.6
+2026-11-12 20:41:43,297 UTC [sensor-c1-inferior] publicou seq=18 temperatura=59.7
+2026-11-12 20:41:44,298 UTC [sensor-c1-inferior] publicou seq=19 temperatura=59.6
+2026-11-12 20:41:45,299 UTC [sensor-c1-inferior] publicou seq=20 temperatura=59.5
+2026-11-12 20:41:46,301 UTC [sensor-c1-inferior] publicou seq=21 temperatura=59.7
+2026-11-12 20:41:47,302 UTC [sensor-c1-inferior] publicou seq=22 temperatura=59.7
+2026-11-12 20:41:48,303 UTC [sensor-c1-inferior] publicou seq=23 temperatura=60.0
+2026-11-12 20:41:49,304 UTC [sensor-c1-inferior] publicou seq=24 temperatura=60.3
+2026-11-12 20:41:50,305 UTC [sensor-c1-inferior] publicou seq=25 temperatura=60.1
+2026-11-12 20:41:51,307 UTC [sensor-c1-inferior] publicou seq=26 temperatura=60.0

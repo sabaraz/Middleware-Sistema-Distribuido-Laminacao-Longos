@@ -1,0 +1,10 @@
+2026-11-12 20:37:41,499 UTC [cliente] rearmar (pedido b26643b8): linha liberada
+2026-11-12 20:37:56,700 UTC [cliente] controlador-2 SEM RESPOSTA em obter_painel, tentativa 1 (cannot connect to ('localhost', 9092): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:38:09,644 UTC [cliente] controlador-2 SEM RESPOSTA em obter_painel, tentativa 1 (cannot connect to ('localhost', 9092): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:38:12,026 UTC [cliente] controlador-2 SEM RESPOSTA em parar_linha, tentativa 1 (cannot connect to ('localhost', 9092): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:38:14,068 UTC [cliente] controlador-2 SEM RESPOSTA em parar_linha, tentativa 2 (cannot connect to ('localhost', 9092): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:38:14,099 UTC [cliente] parar_linha (pedido ffacbeed): linha parada
+2026-11-12 20:38:18,652 UTC [cliente] controlador-2 SEM RESPOSTA em rearmar, tentativa 1 (cannot connect to ('localhost', 9092): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:38:20,707 UTC [cliente] controlador-2 SEM RESPOSTA em rearmar, tentativa 2 (cannot connect to ('localhost', 9092): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:38:20,736 UTC [cliente] rearmar (pedido 607acc99): linha liberada
+2026-11-12 20:38:48,456 UTC [cliente] comparacao: as 3 replicas estao IGUAIS

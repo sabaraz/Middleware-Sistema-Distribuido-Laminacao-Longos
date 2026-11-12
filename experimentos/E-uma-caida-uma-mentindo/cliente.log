@@ -1,0 +1,7 @@
+2026-11-12 20:41:41,191 UTC [cliente] controlador-3 SEM RESPOSTA em obter_painel, tentativa 1 (cannot connect to ('localhost', 9093): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:41:41,795 UTC [cliente] obter_painel: SEM MAIORIA (responderam: [1, 2]). Nada foi aceito.
+2026-11-12 20:41:43,406 UTC [cliente] obter_painel: SEM MAIORIA (responderam: [1, 2]). Nada foi aceito.
+2026-11-12 20:41:46,923 UTC [cliente] controlador-3 SEM RESPOSTA em parar_linha, tentativa 1 (cannot connect to ('localhost', 9093): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:41:48,971 UTC [cliente] controlador-3 SEM RESPOSTA em parar_linha, tentativa 2 (cannot connect to ('localhost', 9093): [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)
+2026-11-12 20:41:48,971 UTC [cliente] parar_linha (pedido 00e4ed7d): linha parada
+2026-11-12 20:41:51,489 UTC [cliente] obter_painel: SEM MAIORIA (responderam: [1, 2]). Nada foi aceito.
