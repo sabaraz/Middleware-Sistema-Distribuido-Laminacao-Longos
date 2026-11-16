@@ -9,25 +9,28 @@ echo === Middleware de supervisao termica TANDEM ===
 echo Pasta do projeto: %CD%
 echo.
 
+set "PYTHON_EXE="
+
 if exist ".venv\Scripts\python.exe" (
     set "PYTHON_EXE=%CD%\.venv\Scripts\python.exe"
     echo Usando o Python do ambiente virtual .venv.
 ) else (
-    where py >nul 2>nul
-    if not errorlevel 1 (
-        set "PYTHON_EXE=py -3"
-        echo Ambiente .venv nao encontrado. Usando o Python Launcher.
+    for /f "delims=" %%P in ('py -3 -c "import sys; print(sys.executable)" 2^>nul') do set "PYTHON_EXE=%%P"
+    if defined PYTHON_EXE (
+        echo Ambiente .venv nao encontrado. Usando Python localizado pelo Launcher.
     ) else (
-        where python >nul 2>nul
-        if errorlevel 1 (
-            echo ERRO: Python nao foi encontrado.
-            echo Instale Python 3.11 ou mais novo, ou crie .venv na pasta do projeto.
-            pause
-            exit /b 1
+        for /f "delims=" %%P in ('python -c "import sys; print(sys.executable)" 2^>nul') do set "PYTHON_EXE=%%P"
+        if defined PYTHON_EXE (
+            echo Ambiente .venv nao encontrado. Usando Python do sistema.
         )
-        set "PYTHON_EXE=python"
-        echo Ambiente .venv nao encontrado. Usando python do sistema.
     )
+)
+
+if not defined PYTHON_EXE (
+    echo ERRO: Python nao foi encontrado.
+    echo Instale Python 3.11 ou mais novo, ou crie .venv na pasta do projeto.
+    pause
+    exit /b 1
 )
 
 echo.
