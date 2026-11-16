@@ -1,9 +1,11 @@
 """O que todos os programas do projeto compartilham:
 endereco do broker, nomes dos topicos, log e conexao MQTT."""
 
+import json
 import logging
 import os
 import time
+from datetime import datetime
 
 import paho.mqtt.client as mqtt
 
@@ -86,6 +88,41 @@ def votar(valores):
     return None
 
 
+# ---------- Validacao das mensagens ----------
+# Qualquer programa ligado ao broker pode publicar um texto qualquer num topico.
+# Sem validacao, o erro de leitura encerraria quem recebe: as tres replicas de uma vez.
+
+def ler_leitura(mensagem, log):
+    """Devolve a leitura do sensor (dicionario), ou None se a mensagem nao for a esperada."""
+    try:
+        leitura = json.loads(mensagem.payload)
+        valida = (leitura["cadeira"] in CADEIRAS
+                  and leitura["cilindro"] in CILINDROS
+                  and type(leitura["seq"]) is int
+                  and type(leitura["temperatura"]) in (int, float)
+                  # O instante precisa ser data e hora com fuso, como o sensor envia.
+                  and datetime.fromisoformat(leitura["instante"]).tzinfo is not None)
+    except (ValueError, TypeError, KeyError):
+        valida = False
+    if not valida:
+        log.info("mensagem descartada em %s: %r", mensagem.topic, mensagem.payload[:60])
+        return None
+    return leitura
+
+
+def ler_valor(mensagem, log):
+    """Devolve o numero de {"valor": <numero>}, ou None se a mensagem nao for a esperada."""
+    try:
+        valor = json.loads(mensagem.payload)["valor"]
+        valida = type(valor) in (int, float)
+    except (ValueError, TypeError, KeyError):
+        valida = False
+    if not valida:
+        log.info("mensagem descartada em %s: %r", mensagem.topic, mensagem.payload[:60])
+        return None
+    return valor
+
+
 # ---------- Topico da simulacao ----------
 
 def topico_falha(cadeira, cilindro):
@@ -97,13 +134,16 @@ def topico_falha(cadeira, cilindro):
 # ---------- Log ----------
 
 def criar_log(nome):
-    """Log com data e hora, na tela e no arquivo logs/<nome>.log."""
+    """Log com data e hora, na tela e no arquivo logs/<nome>.log.
+    log.info vai para os dois; log.debug vai so para o arquivo."""
     os.makedirs("logs", exist_ok=True)
     log = logging.getLogger(nome)
-    log.setLevel(logging.INFO)
+    log.setLevel(logging.DEBUG)
     formato = logging.Formatter("%(asctime)s UTC [%(name)s] %(message)s")
     formato.converter = time.gmtime  # mesma referencia de tempo do campo "instante"
-    for destino in (logging.StreamHandler(), logging.FileHandler(f"logs/{nome}.log", encoding="utf-8")):
+    tela = logging.StreamHandler()
+    tela.setLevel(logging.INFO)
+    for destino in (tela, logging.FileHandler(f"logs/{nome}.log", encoding="utf-8")):
         destino.setFormatter(formato)
         log.addHandler(destino)
     return log

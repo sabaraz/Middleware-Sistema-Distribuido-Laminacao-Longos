@@ -90,14 +90,17 @@ def consultar(metodo, *argumentos):
     return None
 
 
+ICONE_ESTADO = {"normal": "🟢", "alerta": "🟡", "critico": "🔴"}
+
+
 def mostrar_painel(painel):
     print(time.strftime("--- %H:%M:%S UTC ---", time.gmtime()))
     for c in painel["cilindros"]:
         temperatura = "sem leitura" if c["temperatura"] is None else f"{c['temperatura']:6.1f} C"
-        print(f"cadeira {c['cadeira']} {c['cilindro']:<8} {temperatura}  {c['estado']}")
-    print("valvulas:", painel["valvulas"],
-          "| alarme:", painel["alarme"],
-          "| parada:", "SIM" if painel["parada"] else "nao")
+        print(f"{ICONE_ESTADO[c['estado']]} cadeira {c['cadeira']} {c['cilindro']:<8} {temperatura}  {c['estado']}")
+    print("💧 valvulas:", painel["valvulas"],
+          "| 🔔 alarme:", painel["alarme"],
+          "| ⛔ parada:", "SIM" if painel["parada"] else "nao")
 
 
 def ver_painel():

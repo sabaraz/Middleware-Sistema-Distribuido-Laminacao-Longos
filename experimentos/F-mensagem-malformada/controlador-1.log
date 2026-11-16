@@ -1,0 +1,19 @@
+2026-11-16 15:39:12,912 UTC [controlador-1] conectado ao broker; assinando laminacao/cadeira/+/cilindro/+/temperatura
+2026-11-16 15:39:14,935 UTC [controlador-1] recuperacao: controlador-2 sem resposta
+2026-11-16 15:39:16,987 UTC [controlador-1] recuperacao: controlador-3 sem resposta
+2026-11-16 15:39:16,988 UTC [controlador-1] recuperacao: nenhuma colega respondeu; seguindo com o proprio armazenamento
+2026-11-16 15:39:16,993 UTC [controlador-1] comando: laminacao/cadeira/1/refrigeracao/comando/1 valor=50
+2026-11-16 15:39:16,996 UTC [controlador-1] objeto remoto disponivel em PYRO:controlador@localhost:9091
+2026-11-16 15:39:16,997 UTC [controlador-1] comando: laminacao/cadeira/2/refrigeracao/comando/1 valor=50
+2026-11-16 15:39:17,000 UTC [controlador-1] comando: laminacao/cadeira/3/refrigeracao/comando/1 valor=50
+2026-11-16 15:39:17,004 UTC [controlador-1] comando: laminacao/linha/parada/comando/1 valor=0
+2026-11-16 15:39:17,007 UTC [controlador-1] comando: laminacao/linha/alarme/comando/1 valor=0
+2026-11-16 15:39:39,424 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'isto nao e json'
+2026-11-16 15:39:39,424 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'5'
+2026-11-16 15:39:39,425 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'[1,2]'
+2026-11-16 15:39:39,425 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'{}'
+2026-11-16 15:39:39,426 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'{"cadeira":9,"cilindro":"superior","seq":1,"temperatura":60,'
+2026-11-16 15:39:39,427 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'{"cadeira":1,"cilindro":"superior","seq":1,"temperatura":"ab'
+2026-11-16 15:39:39,427 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'{"cadeira":1,"cilindro":"superior","seq":1,"temperatura":60,'
+2026-11-16 15:39:39,428 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'{"cadeira":1,"cilindro":"superior","seq":1,"temperatura":60,'
+2026-11-16 15:39:39,428 UTC [controlador-1] mensagem descartada em laminacao/cadeira/1/cilindro/superior/temperatura: b'\xff\xfe'

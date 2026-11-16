@@ -1,0 +1,8 @@
+2026-11-16 15:39:28,144 UTC [atuador-parada] conectado ao broker; assinando laminacao/linha/parada/comando/+
+2026-11-16 15:39:28,146 UTC [atuador-parada] comando da replica 1; votos {'1': 0}; sem maioria, mantido o valor 0
+2026-11-16 15:39:28,146 UTC [atuador-parada] comando da replica 2; votos {'1': 0, '2': 0}; maioria confirma o valor 0
+2026-11-16 15:39:28,147 UTC [atuador-parada] comando da replica 3; votos {'1': 0, '2': 0, '3': 0}; maioria confirma o valor 0
+2026-11-16 15:39:39,429 UTC [atuador-parada] mensagem descartada em laminacao/linha/parada/comando/1: b'lixo'
+2026-11-16 15:39:39,429 UTC [atuador-parada] mensagem descartada em laminacao/linha/parada/comando/1: b'{"valor":"x"}'
+2026-11-16 15:39:39,430 UTC [atuador-parada] mensagem descartada em laminacao/linha/parada/comando/1: b'{"v":1}'
+2026-11-16 15:39:39,430 UTC [atuador-parada] mensagem descartada em laminacao/linha/parada/comando/1: b'7'

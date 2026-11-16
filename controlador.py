@@ -155,7 +155,9 @@ def ao_conectar(conexao_mqtt, dados, flags, codigo, propriedades):
 def ao_receber(conexao_mqtt, dados, mensagem):
     with mutex:
         # 1. Receber: o texto JSON volta a ser um dicionario.
-        leitura = json.loads(mensagem.payload)
+        leitura = comum.ler_leitura(mensagem, log)
+        if leitura is None:
+            return
         chave = (leitura["cadeira"], leitura["cilindro"])
         seq = leitura["seq"]
 

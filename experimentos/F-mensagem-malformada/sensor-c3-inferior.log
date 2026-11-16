@@ -1,0 +1,31 @@
+2026-11-16 15:39:23,625 UTC [sensor-c3-inferior] publicou seq=1 temperatura=59.9
+2026-11-16 15:39:23,626 UTC [sensor-c3-inferior] conectado ao broker
+2026-11-16 15:39:24,626 UTC [sensor-c3-inferior] publicou seq=2 temperatura=60.0
+2026-11-16 15:39:25,470 UTC [sensor-c3-inferior] simulacao: valvula = 0
+2026-11-16 15:39:25,473 UTC [sensor-c3-inferior] simulacao: valvula = 50
+2026-11-16 15:39:25,626 UTC [sensor-c3-inferior] publicou seq=3 temperatura=60.1
+2026-11-16 15:39:26,627 UTC [sensor-c3-inferior] publicou seq=4 temperatura=60.1
+2026-11-16 15:39:27,628 UTC [sensor-c3-inferior] publicou seq=5 temperatura=59.9
+2026-11-16 15:39:28,146 UTC [sensor-c3-inferior] simulacao: parada = False
+2026-11-16 15:39:28,629 UTC [sensor-c3-inferior] publicou seq=6 temperatura=59.8
+2026-11-16 15:39:29,629 UTC [sensor-c3-inferior] publicou seq=7 temperatura=59.6
+2026-11-16 15:39:30,631 UTC [sensor-c3-inferior] publicou seq=8 temperatura=59.6
+2026-11-16 15:39:31,632 UTC [sensor-c3-inferior] publicou seq=9 temperatura=59.7
+2026-11-16 15:39:32,632 UTC [sensor-c3-inferior] publicou seq=10 temperatura=60.0
+2026-11-16 15:39:33,633 UTC [sensor-c3-inferior] publicou seq=11 temperatura=59.8
+2026-11-16 15:39:34,633 UTC [sensor-c3-inferior] publicou seq=12 temperatura=59.9
+2026-11-16 15:39:35,634 UTC [sensor-c3-inferior] publicou seq=13 temperatura=60.1
+2026-11-16 15:39:36,635 UTC [sensor-c3-inferior] publicou seq=14 temperatura=60.1
+2026-11-16 15:39:37,635 UTC [sensor-c3-inferior] publicou seq=15 temperatura=60.1
+2026-11-16 15:39:38,636 UTC [sensor-c3-inferior] publicou seq=16 temperatura=60.1
+2026-11-16 15:39:39,433 UTC [sensor-c3-inferior] mensagem descartada em laminacao/linha/parada/aplicado: b'lixo'
+2026-11-16 15:39:39,434 UTC [sensor-c3-inferior] mensagem descartada em laminacao/linha/parada/aplicado: b'{"valor":"x"}'
+2026-11-16 15:39:39,435 UTC [sensor-c3-inferior] mensagem descartada em laminacao/linha/parada/aplicado: b'{"v":1}'
+2026-11-16 15:39:39,436 UTC [sensor-c3-inferior] mensagem descartada em laminacao/linha/parada/aplicado: b'7'
+2026-11-16 15:39:39,637 UTC [sensor-c3-inferior] publicou seq=17 temperatura=59.8
+2026-11-16 15:39:40,638 UTC [sensor-c3-inferior] publicou seq=18 temperatura=60.0
+2026-11-16 15:39:41,639 UTC [sensor-c3-inferior] publicou seq=19 temperatura=59.8
+2026-11-16 15:39:42,639 UTC [sensor-c3-inferior] publicou seq=20 temperatura=59.7
+2026-11-16 15:39:43,641 UTC [sensor-c3-inferior] publicou seq=21 temperatura=59.6
+2026-11-16 15:39:44,705 UTC [sensor-c3-inferior] publicou seq=22 temperatura=59.5
+2026-11-16 15:39:45,705 UTC [sensor-c3-inferior] publicou seq=23 temperatura=59.4

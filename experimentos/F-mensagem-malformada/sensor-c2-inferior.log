@@ -1,0 +1,36 @@
+2026-11-16 15:39:18,933 UTC [sensor-c2-inferior] publicou seq=1 temperatura=60.2
+2026-11-16 15:39:18,934 UTC [sensor-c2-inferior] conectado ao broker
+2026-11-16 15:39:19,934 UTC [sensor-c2-inferior] publicou seq=2 temperatura=60.3
+2026-11-16 15:39:20,785 UTC [sensor-c2-inferior] simulacao: valvula = 0
+2026-11-16 15:39:20,786 UTC [sensor-c2-inferior] simulacao: valvula = 50
+2026-11-16 15:39:20,935 UTC [sensor-c2-inferior] publicou seq=3 temperatura=60.0
+2026-11-16 15:39:21,935 UTC [sensor-c2-inferior] publicou seq=4 temperatura=60.0
+2026-11-16 15:39:22,936 UTC [sensor-c2-inferior] publicou seq=5 temperatura=60.0
+2026-11-16 15:39:23,936 UTC [sensor-c2-inferior] publicou seq=6 temperatura=60.1
+2026-11-16 15:39:24,937 UTC [sensor-c2-inferior] publicou seq=7 temperatura=60.3
+2026-11-16 15:39:25,938 UTC [sensor-c2-inferior] publicou seq=8 temperatura=60.2
+2026-11-16 15:39:26,939 UTC [sensor-c2-inferior] publicou seq=9 temperatura=60.3
+2026-11-16 15:39:27,940 UTC [sensor-c2-inferior] publicou seq=10 temperatura=60.5
+2026-11-16 15:39:28,146 UTC [sensor-c2-inferior] simulacao: parada = False
+2026-11-16 15:39:28,940 UTC [sensor-c2-inferior] publicou seq=11 temperatura=60.4
+2026-11-16 15:39:29,943 UTC [sensor-c2-inferior] publicou seq=12 temperatura=60.2
+2026-11-16 15:39:30,944 UTC [sensor-c2-inferior] publicou seq=13 temperatura=60.0
+2026-11-16 15:39:31,945 UTC [sensor-c2-inferior] publicou seq=14 temperatura=59.7
+2026-11-16 15:39:32,946 UTC [sensor-c2-inferior] publicou seq=15 temperatura=59.6
+2026-11-16 15:39:33,947 UTC [sensor-c2-inferior] publicou seq=16 temperatura=59.6
+2026-11-16 15:39:34,948 UTC [sensor-c2-inferior] publicou seq=17 temperatura=59.7
+2026-11-16 15:39:35,949 UTC [sensor-c2-inferior] publicou seq=18 temperatura=60.0
+2026-11-16 15:39:36,950 UTC [sensor-c2-inferior] publicou seq=19 temperatura=59.9
+2026-11-16 15:39:37,951 UTC [sensor-c2-inferior] publicou seq=20 temperatura=59.7
+2026-11-16 15:39:38,951 UTC [sensor-c2-inferior] publicou seq=21 temperatura=59.7
+2026-11-16 15:39:39,433 UTC [sensor-c2-inferior] mensagem descartada em laminacao/linha/parada/aplicado: b'lixo'
+2026-11-16 15:39:39,434 UTC [sensor-c2-inferior] mensagem descartada em laminacao/linha/parada/aplicado: b'{"valor":"x"}'
+2026-11-16 15:39:39,435 UTC [sensor-c2-inferior] mensagem descartada em laminacao/linha/parada/aplicado: b'{"v":1}'
+2026-11-16 15:39:39,436 UTC [sensor-c2-inferior] mensagem descartada em laminacao/linha/parada/aplicado: b'7'
+2026-11-16 15:39:39,952 UTC [sensor-c2-inferior] publicou seq=22 temperatura=60.0
+2026-11-16 15:39:40,953 UTC [sensor-c2-inferior] publicou seq=23 temperatura=60.0
+2026-11-16 15:39:41,954 UTC [sensor-c2-inferior] publicou seq=24 temperatura=59.8
+2026-11-16 15:39:42,955 UTC [sensor-c2-inferior] publicou seq=25 temperatura=59.9
+2026-11-16 15:39:43,956 UTC [sensor-c2-inferior] publicou seq=26 temperatura=60.0
+2026-11-16 15:39:44,957 UTC [sensor-c2-inferior] publicou seq=27 temperatura=60.0
+2026-11-16 15:39:45,958 UTC [sensor-c2-inferior] publicou seq=28 temperatura=59.8

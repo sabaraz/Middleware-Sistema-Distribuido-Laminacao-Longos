@@ -51,7 +51,10 @@ def ao_receber(conexao_mqtt, dados, mensagem):
     global valor_atual
     # O ultimo nivel do topico diz qual replica mandou o comando.
     replica = mensagem.topic.split("/")[-1]
-    votos[replica] = json.loads(mensagem.payload)["valor"]
+    valor = comum.ler_valor(mensagem, log)
+    if valor is None:
+        return
+    votos[replica] = valor
 
     vencedor = comum.votar(list(votos.values()))
     if vencedor is None:

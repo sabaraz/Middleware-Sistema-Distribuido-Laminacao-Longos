@@ -49,12 +49,16 @@ def ao_receber(conexao_mqtt, dados, mensagem):
     if mensagem.topic == TOPICO_FALHA:
         em_falha = mensagem.payload.decode() == "1"
         log.info("simulacao: falha de refrigeracao = %s", em_falha)
-    elif mensagem.topic == TOPICO_VALVULA:
-        valvula = json.loads(mensagem.payload)["valor"]
-        log.info("simulacao: valvula = %s", valvula)
-    elif mensagem.topic == TOPICO_PARADA:
-        parada = json.loads(mensagem.payload)["valor"] == 1
-        log.info("simulacao: parada = %s", parada)
+    else:
+        valor = comum.ler_valor(mensagem, log)
+        if valor is None:
+            return
+        if mensagem.topic == TOPICO_VALVULA:
+            valvula = valor
+            log.info("simulacao: valvula = %s", valvula)
+        elif mensagem.topic == TOPICO_PARADA:
+            parada = valor == 1
+            log.info("simulacao: parada = %s", parada)
 
 
 conexao_mqtt = comum.conectar(nome, ao_conectar, ao_receber)
@@ -87,7 +91,8 @@ try:
         }
         # Serializacao: o dicionario vira texto JSON para ser transportado.
         conexao_mqtt.publish(comum.topico_temperatura(cadeira, cilindro), json.dumps(leitura), qos=comum.QOS)
-        log.info("publicou seq=%d temperatura=%.1f", seq, leitura["temperatura"])
+        # debug: fica no arquivo de log e nao na tela (6 sensores, 1 linha por segundo cada).
+        log.debug("publicou seq=%d temperatura=%.1f", seq, leitura["temperatura"])
 
         time.sleep(INTERVALO)
 except KeyboardInterrupt:

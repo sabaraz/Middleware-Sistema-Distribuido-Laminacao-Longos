@@ -23,7 +23,7 @@ Relatório técnico do 1º Trabalho Prático de Sistemas Distribuídos.
 | Trabalho | 1º Trabalho Prático: implementação de um middleware |
 | Autor | Gustavo Sabara Barbosa |
 | Instituição | Instituto Federal de Minas Gerais, Campus Ouro Branco |
-| Repositório | (preencher com o endereço do GitHub) |
+| Repositório | https://github.com/sabaraz/Middleware-Sistema-Distribuido-Laminacao-Longos |
 
 **Tema.** Supervisão da temperatura dos cilindros de um grupo TANDEM de três
 cadeiras de laminação a quente, com aviso antes da quebra de cilindro. O
@@ -101,11 +101,11 @@ de um controlador que responde valores errados.
 | Atuador: válvula de refrigeração | 3 (uma por cadeira) | `atuador.py` | Aplica a abertura decidida pela maioria |
 | Atuador: alarme | 1 | `atuador.py` | Idem |
 | Atuador: parada da linha | 1 | `atuador.py` | Idem; pára as três cadeiras juntas |
-| Controlador | 3 réplicas iguais | `controlador.py` | Recebe, filtra, grava, decide, comanda e atende o cliente |
+| Controlador | 3 réplicas iguais | `controlador.py` | Recebe, valida, filtra, grava, decide, comanda e atende o cliente |
 | Armazenamento | 1 por réplica | `armazenamento.py` | Leituras, eventos, pedidos e valores persistentes |
 | Cliente | 1 ou mais | `cliente.py` | Painel e ações do operador |
 | Broker | 1 | `docker-compose.yml` | Mosquitto |
-| Código comum | | `comum.py` | Tópicos, endereços, log, conexão e voto |
+| Código comum | | `comum.py` | Tópicos, endereços, voto, validação das mensagens, log e conexão |
 
 ### 3.3 O dado e os tópicos
 
@@ -128,7 +128,10 @@ Leitura publicada pelo sensor (JSON):
 | `.../aplicado` (um por atuador) | Atuador | Sensores simulados |
 | `simulacao/cadeira/<n>/cilindro/<c>/falha` | Operador do experimento | Sensor simulado |
 
-Todas as mensagens usam QoS 1 (entrega ao menos uma vez). Comandos e valores
+Todas as mensagens usam QoS 1: entrega ao menos uma vez enquanto a conexão e
+o broker estão disponíveis, com possibilidade de duplicata. A duplicata de
+leitura é descartada pelo `seq`; a de comando é inofensiva porque o comando
+leva o valor final. Comandos e valores
 aplicados são mensagens retidas: o broker guarda a última de cada tópico e a
 entrega a quem assinar depois.
 
@@ -234,7 +237,7 @@ comandos), dizendo que está tudo normal e a linha liberada:
 | `python controlador.py 2 mentir` | Mente sempre | Réplica invadida |
 | `python controlador.py 2 intermitente` | Mente 5 s, acerta 5 s | Erro intermitente |
 
-### 3.8 Código comum: tópicos, conexão e voto
+### 3.8 Código comum: tópicos, conexão, voto e validação
 
 O arquivo `comum.py` reúne o que todos os programas compartilham. Os nomes dos
 tópicos são montados por funções, para que nenhum programa escreva um tópico à
@@ -257,6 +260,25 @@ A comparação é por igualdade completa, e por isso a mesma função vota núme
 
 @trecho comum.py "MAIORIA = 2" "return None" | O voto. `None` significa que nenhum valor alcançou a maioria.
 
+O broker não tem senha, e qualquer programa ligado a ele pode publicar um
+texto qualquer num tópico. Por isso toda mensagem recebida é validada antes
+de ser usada. `ler_leitura` confere que o texto é JSON, que cadeira e cilindro
+existem, que o `seq` é inteiro, que a temperatura é número e que o instante é
+data e hora com fuso. `ler_valor` confere que a mensagem é
+`{"valor": <número>}`; serve aos comandos, no atuador, e aos valores
+aplicados, no sensor. A mensagem inválida é descartada e registrada no log, e
+quem a recebeu continua a tratar as seguintes.
+
+@codigo comum.py ler_leitura | Validação de uma leitura. Qualquer erro de formato leva ao descarte.
+
+A validação cobre a mensagem malformada. Uma mensagem bem formada e falsa
+continua sendo aceita: é a limitação de autenticação da seção 8.1.
+
+O log tem dois níveis. `log.info` vai para a tela e para o arquivo;
+`log.debug` vai só para o arquivo.
+
+@codigo comum.py criar_log | Log em UTC, na tela e em arquivo.
+
 ### 3.9 Código do sensor
 
 O sensor é um laço: calcula a temperatura, monta a leitura, serializa em JSON
@@ -268,12 +290,17 @@ esfria; em falha de refrigeração, aquece (menos com a válvula em 100); sem
 falha, volta aos poucos para a temperatura de trabalho. É simulação do mundo
 físico, não comunicação do processo: numa usina o sensor não ouve a válvula.
 
+A linha de log de cada leitura é gravada só no arquivo (`log.debug`): com 6
+sensores a uma leitura por segundo, ela escondia na tela os votos dos
+atuadores. A tela do sensor mostra a conexão e os eventos da simulação.
+
 @trecho sensor.py "while True:" "time.sleep(INTERVALO)" | Laço do sensor: modelo físico, montagem da leitura e publicação com QoS 1.
 
 ### 3.10 Código do atuador
 
 O atuador guarda o último valor comandado por cada réplica, identificada pelo
-último nível do tópico. A cada comando refaz o voto. Há três desfechos: sem
+último nível do tópico. O comando malformado é descartado antes de virar
+voto. A cada comando válido o atuador refaz o voto. Há três desfechos: sem
 maioria, mantém o valor; maioria igual ao valor atual, confirma; maioria
 diferente, muda o valor e publica o que aplicou.
 
@@ -286,7 +313,9 @@ comando várias vezes não muda nada (idempotência).
 
 Cada réplica tem um arquivo SQLite com quatro tabelas. A leitura tem
 identidade `(cadeira, cilindro, instante)`: a mesma leitura nunca é gravada
-duas vezes, venha do broker ou da cópia de uma colega.
+duas vezes, venha do broker ou da cópia de uma colega. O `seq` não faz parte
+da chave, porque volta a 1 quando o sensor reinicia; ele é usado em memória,
+pelo controlador, para filtrar duplicata, perda e reinício.
 
 @trecho armazenamento.py "class Armazenamento" "self.banco.commit()" | Criação das quatro tabelas: leituras, eventos, valores persistentes e pedidos.
 
@@ -322,11 +351,12 @@ relógio, nem sorteio: dadas as mesmas entradas, devolve sempre o mesmo estado.
 
 @codigo controlador.py classificar | Classificação de um cilindro, com o piso de 55 °C para a taxa e a histerese.
 
-Cada leitura passa por cinco etapas, numeradas nos comentários. O tratamento
+Cada leitura passa por cinco etapas, numeradas nos comentários. A primeira
+inclui a validação: a mensagem inválida encerra o tratamento ali. O tratamento
 inteiro acontece com o mutex preso, porque as chamadas do cliente chegam em
 outra thread e mexem nas mesmas variáveis.
 
-@codigo controlador.py ao_receber | Tratamento de uma leitura: receber, filtrar pelo `seq`, gravar, decidir e comandar.
+@codigo controlador.py ao_receber | Tratamento de uma leitura: receber e validar, filtrar pelo `seq`, gravar, decidir e comandar.
 
 Do cilindro para o conjunto vale o pior caso. A parada ativa é gravada em
 disco antes de o comando ser publicado: se o controlador cair entre os dois
@@ -342,13 +372,17 @@ como mensagem retida.
 
 ### 3.13 Código do controlador: as ações do operador
 
-Os métodos da classe exposta são os únicos que o cliente consegue chamar.
-Cada um pega o mutex e delega. Nas ações, a função que executa é entregue a
+A classe exposta tem seis métodos, e só eles podem ser chamados de fora. O
+cliente usa cinco; o sexto, `obter_copia`, serve à transferência de estado
+entre réplicas. Sem autenticação, qualquer programa que alcance o endereço
+pode chamá-los (seção 8.1). Cada um pega o mutex e delega. Nas ações, a função que executa é entregue a
 `executar_uma_vez` sem parênteses: é passada adiante, não chamada ali.
 
 @trecho controlador.py "def parar_linha(self, pedido):" "executar_uma_vez(pedido, executar_rearme)" | Métodos remotos das duas ações do operador.
 
-`executar_uma_vez` aplica a garantia de no máximo uma vez, por réplica. Se o
+`executar_uma_vez` é uma deduplicação pelo identificador do pedido: aplica a
+garantia de no máximo uma vez, por réplica, a partir do momento em que o
+identificador está gravado. Se o
 identificador já está guardado, a ação não é executada e a resposta antiga é
 devolvida. Entre executar e gravar o identificador há uma janela: uma queda
 nesse ponto faz a repetição ser executada de novo, e quem a torna inofensiva
@@ -423,6 +457,13 @@ chamadas. As três réplicas e as repetições recebem o mesmo.
 
 @codigo cliente.py enviar_acao | Ação do operador: identificador, duas tentativas por réplica e resultado pela maioria.
 
+O painel é impresso em texto. Cada cilindro leva um ícone conforme o estado
+(verde, amarelo ou vermelho), e a última linha traz válvulas, alarme e parada.
+Os ícones são só apresentação: o dado é o que a maioria das réplicas
+respondeu.
+
+@codigo cliente.py mostrar_painel | Painel do operador.
+
 ## 4. Ambiente e versões
 
 | Item | Versão |
@@ -438,6 +479,11 @@ chamadas. As três réplicas e as repetições recebem o mesmo.
 
 Todos os processos rodam na mesma máquina. Todos os logs têm data e hora em
 UTC.
+
+Os experimentos E1 a E6 foram executados neste ambiente. A verificação de
+mensagem malformada (seção 6) foi executada em 2026-11-16 em outra máquina,
+com Windows 11 Pro, Python 3.14.6 e Docker Engine 29.7.2, e as mesmas versões
+de paho-mqtt e Pyro5; o comportamento do sistema foi o mesmo.
 
 ## 5. Procedimento de execução
 
@@ -463,6 +509,9 @@ python cliente.py
 `iniciar_controladores.py` inicia as 3 réplicas. `iniciar_campo.py` inicia os
 6 sensores e os 5 atuadores. Ctrl+C encerra.
 
+Na tela de `iniciar_campo.py` aparecem os votos dos atuadores e os eventos da
+simulação. As leituras dos sensores ficam nos arquivos de log.
+
 Opções do cliente: 1 ver painel; 2 acompanhar; 3 últimos eventos; 4 parar a
 linha; 5 rearmar; 6 comparar as réplicas.
 
@@ -481,9 +530,36 @@ linha; 5 rearmar; 6 comparar as réplicas.
 Para os experimentos com réplica defeituosa, as três réplicas são iniciadas
 uma a uma, em três terminais, em vez de `iniciar_controladores.py`.
 
+### 5.4 Visualização do broker (opcional)
+
+O cliente do operador mostra o resultado depois do voto. Para ver o que
+circula no broker antes do voto pode-se usar o MQTT Explorer, um programa
+pronto que assina todos os tópicos e os mostra em árvore. É o equivalente
+gráfico do `mosquitto_sub` da tabela acima. Não faz parte do middleware, não
+exige alteração no código e não substitui o cliente.
+
+| Item | Valor |
+|---|---|
+| Ligação | Servidor `localhost`, porta `1883`, sem usuário e sem TLS |
+| Identificador do cliente | O que a ferramenta gera. Um nome igual ao de um processo do sistema (`controlador-1`, `atuador-parada`) faria o broker derrubar esse processo |
+| O que mostra | As leituras de cada sensor, os comandos de cada réplica (`comando/1`, `comando/2`, `comando/3`) e o valor aplicado por cada atuador |
+| O que não mostra | A comunicação entre cliente e controladores (Pyro5), o voto do cliente e os armazenamentos |
+| Provocar a falha por ele | Publicar o texto `1` em `simulacao/cadeira/2/cilindro/superior/falha`, sem retenção; `0` encerra |
+
+Com uma réplica em modo `mentir` e uma falha em curso, a árvore mostra dois
+comandos em 100, um em 50 e o valor aplicado em 100: o voto do atuador fica
+visível sem abrir o código.
+
+Só o tópico de simulação deve receber publicação manual. Um comando bem
+formado publicado à mão num tópico `comando` conta como voto (seção 8.1).
+
 ## 6. Resultados: tabelas, logs e medidas
 
-Executados em 2026-11-12, horários em UTC. Antes de cada execução o broker foi
+Os experimentos E1 a E6 foram executados em 2026-11-12, com a versão do
+código anterior à validação de mensagens (commit `f301321`). A validação, o
+nível de log do sensor e os ícones do painel, acrescentados depois, não
+alteram a regra de decisão, o voto nem a replicação. Horários em UTC. Antes de
+cada execução o broker foi
 reiniciado e os armazenamentos apagados. Os logs completos estão na pasta
 `experimentos`, uma subpasta por execução.
 
@@ -494,6 +570,10 @@ reiniciado e os armazenamentos apagados. Os logs completos estão na pasta
 | C | E5, réplica intermitente | `experimentos/C-replica-intermitente` |
 | D | E6, duas réplicas mentindo | `experimentos/D-duas-replicas-mentindo` |
 | E | E6, uma réplica fora e uma mentindo | `experimentos/E-uma-caida-uma-mentindo` |
+| F | Verificação de mensagem malformada (2026-11-16) | `experimentos/F-mensagem-malformada` |
+
+As medidas são de execuções locais específicas, com todos os processos numa
+só máquina. Não são garantia de desempenho nem medida de rede real.
 
 ### E1. Operação normal
 
@@ -578,7 +658,9 @@ Comparação pelo cliente, com os sensores parados:
 | 2 | 181 em cada um dos 6 | 1086 | 3 | Não |
 | 3 | 181 em cada um dos 6 | 1086 | 3 | Não |
 
-Cliente: "comparacao: as 3 replicas estao IGUAIS".
+Cliente: "comparacao: as 3 replicas estao IGUAIS". A comparação cobre a
+contagem de leituras por sensor e a parada ativa; não cobre janelas, estados
+e o restante da memória curta.
 
 A quantidade de eventos difere (28, 26 e 28): cada réplica registra as suas
 próprias decisões, e a réplica 2 não registrou as do período em que esteve
@@ -641,7 +723,46 @@ garantido. No caso 1 o operador é enganado e a linha não pára. No caso 2 as
 consultas falham de forma segura, e a ação de parada é confirmada sem ter
 efeito.
 
+### Verificação adicional: mensagem malformada
+
+Não é um dos experimentos previstos. Foi feita depois deles, porque uma
+mensagem inválida revelou uma falha comum às três réplicas.
+
+**Antes da validação.** Com o código dos experimentos E1 a E6, um texto que
+não era JSON, publicado no tópico de temperatura, encerrou a thread MQTT das
+três réplicas ao mesmo tempo: a contagem de leituras parou de crescer nas
+três, e elas continuaram respondendo ao cliente com o painel parado. O mesmo
+texto num tópico de comando encerrou o processo do atuador de parada.
+
+**Depois da validação** (execução F, três réplicas corretas e 11 processos de
+campo). Um cliente MQTT de teste publicou 21 mensagens inválidas às 15:39:39.
+
+| Tópico | Mensagens | Conteúdo |
+|---|---|---|
+| Temperatura da cadeira 1, cilindro superior | 9 | Texto solto; número; lista; objeto vazio; cadeira inexistente; temperatura em texto; instante sem fuso; instante numérico; bytes que não são UTF-8 |
+| Comando 1 do atuador de parada | 4 | Texto solto; valor em texto; campo com outro nome; número solto |
+| Valor aplicado da válvula 1 | 4 | Os mesmos quatro |
+| Valor aplicado da parada | 4 | Os mesmos quatro |
+
+| Fato | Evidência |
+|---|---|
+| Cada réplica descartou as 9 leituras inválidas | 9 linhas "mensagem descartada" em cada `controlador-N.log` |
+| O atuador de parada descartou os 4 comandos | 4 linhas em `atuador-parada.log`; nenhum voto registrado |
+| Os sensores descartaram os valores aplicados inválidos | 8 linhas nos dois sensores da cadeira 1; 4 nos outros quatro |
+| Nenhum processo encerrou | Os 14 processos seguiram em execução |
+| As réplicas continuaram recebendo leituras | Leituras por sensor em cada réplica: de 26, 27, 23, 24, 18 e 20 para 30, 31, 27, 28, 22 e 24 em 4 s |
+| As réplicas continuaram iguais | As três com as mesmas contagens |
+
+A validação trata a mensagem malformada. Não trata a mensagem bem formada e
+falsa, que depende de autenticação no broker (seção 8.1).
+
 ## 7. Discussão
+
+**Réplicas iguais caem juntas diante da mesma entrada inválida.** As três
+réplicas recebem as mesmas mensagens e executam o mesmo código. Uma mensagem
+que derruba uma derruba as três, e o voto não tem o que comparar. A
+replicação cobre a falha de uma réplica, não a falha comum a todas; por isso
+a validação da entrada é parte da tolerância a falhas, e não um acabamento.
 
 **A replicação saiu quase de graça do publicar/assinar.** Nenhum código copia
 leituras entre réplicas em operação normal: o broker entrega a mesma mensagem
@@ -717,7 +838,7 @@ para "liberada" pode custar o equipamento.
 
 | Limitação | Consequência |
 |---|---|
-| Mensagem malformada não é tratada | Um texto que não seja o JSON esperado causa erro no tratamento daquela mensagem |
+| Mensagem malformada é só descartada | Um texto que não seja o JSON esperado é descartado e registrado no log (`ler_leitura` e `ler_valor` em `comum.py`). Uma mensagem bem formada e falsa continua sendo aceita: ver broker sem autenticação, em 8.1 |
 | `seq` menor que o último é tratado como reinício do sensor | Uma leitura fora de ordem seria aceita como reinício |
 | Eventos são exibidos sem voto | Cada réplica marca a hora pelo seu relógio; os registros nunca são idênticos |
 | Painel mostra o valor comandado, não o aplicado | O cliente não lê o tópico `aplicado`, por não falar com o broker |
@@ -726,6 +847,7 @@ para "liberada" pode custar o equipamento.
 | Tabela de pedidos só cresce | É copiada inteira a cada transferência de estado |
 | Modelo físico do sensor fixado em 1 leitura por segundo | Os incrementos de temperatura são por leitura; mudar o intervalo muda a taxa simulada |
 | Tudo em uma máquina | Latências e relógios não representam uma rede real |
+| Ícones do painel dependem do terminal | Num terminal sem suporte a Unicode aparecem como quadrados |
 
 ## 9. Conclusão
 
@@ -772,3 +894,4 @@ Documentação das ferramentas:
 - SQLite. https://www.sqlite.org/docs.html
 - Python 3.11. https://docs.python.org/3.11/
 - Docker Compose. https://docs.docker.com/compose/
+- MQTT Explorer. https://mqtt-explorer.com/

@@ -15,7 +15,7 @@ A Documentação do Trabalho se encontra em [docs/relatorio.pdf](docs/relatorio.
 
 ## Requisitos
 
-- Python 3.11
+- Python 3.11 ou mais novo (testado com 3.11.9 e 3.14.6)
 - Docker com Docker Compose
 
 ## Preparação
@@ -45,6 +45,7 @@ python cliente.py
 | Controlador que mente sempre | `python controlador.py 2 mentir` |
 | Controlador com erro intermitente | `python controlador.py 2 intermitente` |
 | Comandos circulando no broker | `docker compose exec broker mosquitto_sub -v -t "laminacao/#"` |
+| O mesmo, em árvore (opcional) | MQTT Explorer ligado a `localhost:1883`; ver a seção 5.4 do relatório |
 | Partir sem resíduo | `docker compose restart broker` e apagar a pasta `dados` |
 
 Para usar um controlador defeituoso, inicie as três réplicas uma a uma
@@ -55,7 +56,7 @@ Para usar um controlador defeituoso, inicie as três réplicas uma a uma
 
 | Arquivo | Papel |
 |---|---|
-| `comum.py` | Tópicos, endereços, log, conexão com o broker e voto |
+| `comum.py` | Tópicos, endereços, voto, validação das mensagens, log e conexão com o broker |
 | `sensor.py` | Sensor simulado de um cilindro |
 | `atuador.py` | Atuador simulado; aplica o valor da maioria |
 | `controlador.py` | Réplica do controlador: decide, comanda e atende o cliente |
@@ -65,6 +66,8 @@ Para usar um controlador defeituoso, inicie as três réplicas uma a uma
 | `iniciar_controladores.py` | Inicia as 3 réplicas |
 | `docker-compose.yml`, `mosquitto/` | Broker MQTT |
 | `experimentos/` | Logs das execuções citadas no relatório |
-| `docs/` | Relatório e material de estudo |
+| `docs/` | Relatório e imagens |
 
-Os logs de cada execução ficam em `logs/` e os bancos em `dados/`.
+Ao executar, os programas criam a pasta `logs/` (um arquivo por processo; as
+leituras dos sensores ficam só nela, não na tela) e a pasta `dados/` (um banco
+por réplica).

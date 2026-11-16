@@ -1,0 +1,33 @@
+2026-11-16 15:39:21,975 UTC [sensor-c3-superior] publicou seq=1 temperatura=60.1
+2026-11-16 15:39:21,976 UTC [sensor-c3-superior] conectado ao broker
+2026-11-16 15:39:22,976 UTC [sensor-c3-superior] publicou seq=2 temperatura=60.2
+2026-11-16 15:39:23,977 UTC [sensor-c3-superior] publicou seq=3 temperatura=60.0
+2026-11-16 15:39:24,978 UTC [sensor-c3-superior] publicou seq=4 temperatura=60.0
+2026-11-16 15:39:25,470 UTC [sensor-c3-superior] simulacao: valvula = 0
+2026-11-16 15:39:25,473 UTC [sensor-c3-superior] simulacao: valvula = 50
+2026-11-16 15:39:25,979 UTC [sensor-c3-superior] publicou seq=5 temperatura=59.8
+2026-11-16 15:39:26,979 UTC [sensor-c3-superior] publicou seq=6 temperatura=60.0
+2026-11-16 15:39:27,980 UTC [sensor-c3-superior] publicou seq=7 temperatura=60.1
+2026-11-16 15:39:28,146 UTC [sensor-c3-superior] simulacao: parada = False
+2026-11-16 15:39:28,981 UTC [sensor-c3-superior] publicou seq=8 temperatura=60.0
+2026-11-16 15:39:29,982 UTC [sensor-c3-superior] publicou seq=9 temperatura=59.8
+2026-11-16 15:39:30,983 UTC [sensor-c3-superior] publicou seq=10 temperatura=59.9
+2026-11-16 15:39:31,984 UTC [sensor-c3-superior] publicou seq=11 temperatura=60.1
+2026-11-16 15:39:32,985 UTC [sensor-c3-superior] publicou seq=12 temperatura=60.3
+2026-11-16 15:39:33,986 UTC [sensor-c3-superior] publicou seq=13 temperatura=60.5
+2026-11-16 15:39:34,987 UTC [sensor-c3-superior] publicou seq=14 temperatura=60.1
+2026-11-16 15:39:35,988 UTC [sensor-c3-superior] publicou seq=15 temperatura=59.9
+2026-11-16 15:39:36,990 UTC [sensor-c3-superior] publicou seq=16 temperatura=59.7
+2026-11-16 15:39:37,991 UTC [sensor-c3-superior] publicou seq=17 temperatura=59.7
+2026-11-16 15:39:38,992 UTC [sensor-c3-superior] publicou seq=18 temperatura=59.7
+2026-11-16 15:39:39,433 UTC [sensor-c3-superior] mensagem descartada em laminacao/linha/parada/aplicado: b'lixo'
+2026-11-16 15:39:39,434 UTC [sensor-c3-superior] mensagem descartada em laminacao/linha/parada/aplicado: b'{"valor":"x"}'
+2026-11-16 15:39:39,435 UTC [sensor-c3-superior] mensagem descartada em laminacao/linha/parada/aplicado: b'{"v":1}'
+2026-11-16 15:39:39,436 UTC [sensor-c3-superior] mensagem descartada em laminacao/linha/parada/aplicado: b'7'
+2026-11-16 15:39:39,993 UTC [sensor-c3-superior] publicou seq=19 temperatura=59.9
+2026-11-16 15:39:40,993 UTC [sensor-c3-superior] publicou seq=20 temperatura=59.8
+2026-11-16 15:39:41,995 UTC [sensor-c3-superior] publicou seq=21 temperatura=60.1
+2026-11-16 15:39:42,996 UTC [sensor-c3-superior] publicou seq=22 temperatura=60.0
+2026-11-16 15:39:43,997 UTC [sensor-c3-superior] publicou seq=23 temperatura=60.2
+2026-11-16 15:39:44,997 UTC [sensor-c3-superior] publicou seq=24 temperatura=60.2
+2026-11-16 15:39:45,998 UTC [sensor-c3-superior] publicou seq=25 temperatura=60.4
