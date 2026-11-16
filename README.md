@@ -2,83 +2,163 @@
 
 1º Trabalho Prático de Sistemas Distribuídos.
 
-Sensores de temperatura dos cilindros de um grupo TANDEM de três cadeiras de
-laminação a quente de blocos de aço (tarugos, beam blanks e outros
-semiacabados para produtos longos) publicam leituras; três controladores replicados decidem; atuadores
-(válvulas de refrigeração, alarme e parada da linha) executam o que a maioria
-comandar; um cliente de terminal acompanha e age.
+A documentação completa do trabalho está em [docs/relatorio.pdf](docs/relatorio.pdf).
+Este arquivo é o guia de execução.
 
-Inspirado na laminação de perfis estruturais da Gerdau Ouro Branco. Tudo é
-simulado; nenhum dado da empresa é usado.
+## Inspiração do projeto
 
-A Documentação do Trabalho se encontra em [docs/relatorio.pdf](docs/relatorio.pdf).
+A ideia veio de duas leituras:
+
+- [Catálogo Gerdau de perfis estruturais](https://api.aecweb.com.br/cls/catalogos/28792/22314/catalogo-gerdau-perfis-estruturais.pdf):
+  o produto. Perfis estruturais são laminados a quente em cadeiras em
+  sequência, a partir de blocos de aço como tarugos e beam blanks. Daí o
+  cenário de um grupo TANDEM de três cadeiras, cada uma com um cilindro
+  superior e um inferior.
+- [Fire crack failure of a ductile cast iron roll](https://ph01.tci-thaijo.org/index.php/kbej/article/view/147773)
+  (Boonrampai e Netpu, Kasem Bundit Engineering Journal, v. 8, n. 3, 2018):
+  o problema. O artigo analisa um cilindro de laminação a quente que falhou
+  com 3.500 toneladas de serviço, quando o normal era de 65.000 a 70.000, por
+  trincas térmicas causadas por refrigeração insuficiente. Daí a pergunta do
+  trabalho: perceber cedo que um cilindro está aquecendo, abrir a
+  refrigeração e, no limite, parar a linha.
+
+Tudo é simulado. Nenhum dado de empresa é usado.
+
+## O que o sistema faz
+
+Seis sensores de temperatura (um por cilindro) publicam leituras por MQTT.
+Três controladores replicados recebem as mesmas leituras e decidem. Cinco
+atuadores (três válvulas de refrigeração, o alarme e a parada da linha)
+executam o que a maioria dos controladores comandar. Um cliente de terminal
+consulta os três controladores por Pyro5 e aceita a resposta da maioria.
 
 ## Requisitos
 
-- Python 3.11 ou mais novo (testado com 3.11.9 e 3.14.6)
-- Docker com Docker Compose
+- Windows com Python 3.11 ou mais novo (testado com 3.11.9 e 3.14.6)
+- Docker Desktop, com Docker Compose
+- Opcional: MQTT Explorer, para ver o broker em árvore
 
-## Preparação
+## Preparação (uma vez)
 
-```
-pip install -r requirements.txt
-docker compose up -d
-```
-
-## Execução
-
-Um terminal para cada comando, com o ambiente virtual ativado:
+No terminal, dentro da pasta do projeto:
 
 ```
-python iniciar_controladores.py
-python iniciar_campo.py
-python cliente.py
+py -3 -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
+## Início rápido
 
-## Início para apresentação no Windows
+1. Abra o Docker Desktop e espere ele ficar pronto.
+2. Dê duplo clique em `iniciar_apresentacao.bat`.
 
-Depois de instalar as dependências uma vez, dê duplo clique em
-`iniciar_apresentacao.bat`. O arquivo inicia o broker MQTT pelo Docker e abre
-cinco janelas: três controladores, o campo (sensores e atuadores) e o cliente.
+O arquivo inicia o broker e abre cinco janelas: três controladores, o campo
+(sensores e atuadores) e o cliente do operador. Ele usa o Python de `.venv`
+quando a pasta existe; se não, o Python instalado no sistema.
 
-Ele usa `.venv\\Scripts\\python.exe` quando o ambiente virtual existe; caso
-contrário, tenta usar o Python instalado no sistema. Feche as janelas dos
-processos ao terminar e use `docker compose down` para encerrar o broker.
+Se o `.bat` falhar ou alguma janela fechar sozinha, siga o roteiro manual
+abaixo, sem pular passos.
 
-### MQTT Explorer: visualização do broker
+## Roteiro manual
 
-O MQTT Explorer é apenas um observador durante a apresentação; o cliente de
-terminal continua sendo o único caminho usado para parar ou rearmar a linha.
+Faz o mesmo que o `.bat`, um passo por vez. Cada passo tem uma conferência:
+só avance quando ela passar. Todos os comandos são dados dentro da pasta do
+projeto.
+
+| Passo | Terminal | Comando | Conferência |
+|---|---|---|---|
+| 1 | qualquer | `docker compose up -d` | `docker compose ps` mostra `laminacao-broker` em execução |
+| 2 | A | `.venv\Scripts\python.exe controlador.py 1` | Aparece "objeto remoto disponivel em PYRO:controlador@localhost:9091" |
+| 3 | B | `.venv\Scripts\python.exe controlador.py 2` | O mesmo, com a porta 9092 |
+| 4 | C | `.venv\Scripts\python.exe controlador.py 3` | O mesmo, com a porta 9093 |
+| 5 | D | `.venv\Scripts\python.exe iniciar_campo.py` | Aparece "11 processos iniciados" |
+| 6 | E | `.venv\Scripts\python.exe cliente.py` | Aparece o menu; a opção 1 mostra os seis cilindros com "(maioria: [1, 2, 3])" |
+
+A ordem importa: broker, controladores, campo, cliente. Use o Windows
+Terminal para o cliente; no console antigo os ícones do painel podem não
+aparecer.
+
+Opções do cliente: 1 ver painel; 2 acompanhar (Ctrl+C volta ao menu);
+3 últimos eventos; 4 parar a linha; 5 rearmar; 6 comparar as réplicas;
+0 sair.
+
+### Se um passo falhar
+
+| O que aparece | O que fazer |
+|---|---|
+| `docker` não é reconhecido, ou erro ao ligar ao Docker | Abrir o Docker Desktop, esperar ficar pronto e repetir o passo 1 |
+| Porta 1883 em uso | Outro broker está ligado. Encerrar o outro e repetir o passo 1 |
+| `.venv\Scripts\python.exe` não encontrado | Refazer a seção Preparação |
+| `ModuleNotFoundError` (paho ou Pyro5) | `.venv\Scripts\python.exe -m pip install -r requirements.txt` |
+| Controlador encerra com erro de endereço em uso | Há outro controlador com o mesmo número aberto. Fechar a janela antiga e repetir o passo |
+| Cliente mostra "SEM RESPOSTA" ou "SEM MAIORIA" logo no início | Conferir se as três janelas de controlador estão abertas; reabrir a que faltar |
+| Linha já parada, alarme ligado ou cilindro em alerta logo ao iniciar | Sobrou estado de uma execução anterior. Fazer a partida limpa |
+
+### Partida limpa
+
+Use antes da apresentação e sempre que o sistema começar com resíduo.
+
+1. Fechar as janelas do cliente, do campo e dos três controladores.
+2. `docker compose restart broker`
+3. `rmdir /s /q dados` (no PowerShell: `Remove-Item -Recurse -Force dados`)
+4. Repetir o roteiro manual a partir do passo 2, ou abrir o `.bat` de novo.
+
+### Encerrar
+
+Fechar as janelas dos processos e executar `docker compose down`.
+
+## MQTT Explorer: visualização do broker
+
+O MQTT Explorer é só um observador. O cliente de terminal continua sendo o
+único caminho para parar ou rearmar a linha.
 
 1. Com o sistema já iniciado, crie uma conexão.
 2. Informe host `localhost` e porta `1883`.
-3. Não informe usuário ou senha: o broker de simulação é local e anônimo.
-4. Assine `laminacao/#`.
-5. Expanda a árvore: `cadeira` mostra sensores, refrigeração e valores
-   aplicados; `linha` mostra alarme e parada.
-6. Para provocar falha, use o comando documentado na seção Demonstrações,
-   nunca publique manualmente em `laminacao/#`.
+3. Não informe usuário nem senha: o broker de simulação é local e anônimo.
+4. Deixe o identificador de cliente que o programa gera. Um nome igual ao de
+   um processo do sistema (`controlador-1`, `atuador-parada`) faz o broker
+   derrubar esse processo.
+5. Expanda a árvore `laminacao`: `cadeira` mostra sensores, comandos de
+   refrigeração e valores aplicados; `linha` mostra alarme e parada.
 
-O programa é útil para acompanhar os três comandos de réplica, o voto no
-atuador e o valor aplicado, sem alterar a arquitetura do trabalho.
+Só o tópico de simulação pode receber publicação manual (ver a tabela
+abaixo). Nunca publique em `laminacao/#`: um comando bem formado publicado à
+mão conta como voto.
 
 ## Demonstrações
 
-| O que mostrar | Como |
-|---|---|
-| Falha de refrigeração em um cilindro | `docker compose exec broker mosquitto_pub -q 1 -t simulacao/cadeira/2/cilindro/superior/falha -m 1` |
-| Encerrar a falha | O mesmo comando com `-m 0` |
-| Queda de um controlador | Encerrar o processo; trazer de volta com `python controlador.py 2` |
-| Controlador que mente sempre | `python controlador.py 2 mentir` |
-| Controlador com erro intermitente | `python controlador.py 2 intermitente` |
-| Comandos circulando no broker | `docker compose exec broker mosquitto_sub -v -t "laminacao/#"` |
-| O mesmo, em árvore (opcional) | MQTT Explorer ligado a `localhost:1883`; ver a seção 5.4 do relatório |
-| Partir sem resíduo | `docker compose restart broker` e apagar a pasta `dados` |
+Comandos usados nas demonstrações:
 
-Para usar um controlador defeituoso, inicie as três réplicas uma a uma
-(`python controlador.py 1`, `python controlador.py 2 mentir`,
-`python controlador.py 3`) em vez de `iniciar_controladores.py`.
+| Ação | Comando |
+|---|---|
+| Provocar falha de refrigeração | `docker compose exec broker mosquitto_pub -q 1 -t simulacao/cadeira/2/cilindro/superior/falha -m 1` |
+| Encerrar a falha | O mesmo comando com `-m 0` |
+| Derrubar um controlador | Fechar a janela dele (ou Ctrl+C) |
+| Trazer o controlador de volta | `.venv\Scripts\python.exe controlador.py 2` |
+| Controlador que mente sempre | `.venv\Scripts\python.exe controlador.py 2 mentir` |
+| Controlador com erro intermitente | `.venv\Scripts\python.exe controlador.py 2 intermitente` |
+| Ver os comandos no broker, em texto | `docker compose exec broker mosquitto_sub -v -t "laminacao/#"` |
+
+Pelo MQTT Explorer, a falha é provocada publicando o texto `1` em
+`simulacao/cadeira/2/cilindro/superior/falha`, sem retenção; `0` encerra.
+
+Roteiro de cada experimento do relatório (seção 6). Os tempos são os das
+execuções locais registradas no relatório e variam um pouco a cada vez.
+
+| Experimento | Como fazer | O que se espera ver |
+|---|---|---|
+| E1. Operação normal | Sistema iniciado; cliente, opção 2 | Seis cilindros em normal, "(maioria: [1, 2, 3])" |
+| E2. Aquecimento de um cilindro | Provocar a falha; acompanhar pela opção 2; depois da parada, encerrar a falha e rearmar (opção 5) | Alerta em cerca de 2 s, com válvula 2 em 100 e alarme ligado; parada cerca de 33 s depois do alerta; rearme aceito depois que o cilindro esfria |
+| E3. Queda de uma réplica | Fechar o controlador 2; usar as opções 1, 4 e 5 | "controlador-2 SEM RESPOSTA"; tudo aceito com maioria [1, 3]; a ação demora cerca de 4 s |
+| E4. Réplica que reinicia | Abrir de novo o controlador 2; opção 6 | Na janela dele, "recuperacao: ... leituras recebidas"; no cliente, réplicas IGUAIS quando os sensores estão parados |
+| E5. Réplica com valores errados | Partida limpa; controlador 2 em `mentir` (ou `intermitente`); provocar a falha | Cliente aponta o controlador 2 como divergente; válvula e parada aplicadas pelo voto de 1 e 3 |
+| E6, caso 1. Duas réplicas mentindo | Partida limpa; controladores 2 e 3 em `mentir`; provocar a falha | A linha não pára e o painel aceito é o falso: limite do voto 2 de 3 |
+| E6, caso 2. Uma fora e uma mentindo | Partida limpa; controlador 1 normal, 2 em `mentir`, 3 não iniciado | Consultas com "SEM MAIORIA"; a parada pedida é confirmada ao cliente, mas o atuador mantém 0 |
+
+Para usar um controlador defeituoso, feche a janela do controlador
+correspondente e abra outra com o comando da tabela de ações. Os logs das
+execuções citadas no relatório, inclusive a verificação de mensagem
+malformada, estão em `experimentos/`.
 
 ## Arquivos
 
@@ -91,7 +171,8 @@ Para usar um controlador defeituoso, inicie as três réplicas uma a uma
 | `armazenamento.py` | Armazenamento de uma réplica (SQLite) |
 | `cliente.py` | Cliente do operador |
 | `iniciar_campo.py` | Inicia os 6 sensores e os 5 atuadores |
-| `iniciar_controladores.py` | Inicia as 3 réplicas |
+| `iniciar_controladores.py` | Inicia as 3 réplicas numa só janela |
+| `iniciar_apresentacao.bat` | Inicia tudo no Windows, uma janela por processo |
 | `docker-compose.yml`, `mosquitto/` | Broker MQTT |
 | `experimentos/` | Logs das execuções citadas no relatório |
 | `docs/` | Relatório e imagens |
