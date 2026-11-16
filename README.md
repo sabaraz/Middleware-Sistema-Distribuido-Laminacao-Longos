@@ -35,6 +35,34 @@ python iniciar_campo.py
 python cliente.py
 ```
 
+
+## Início para apresentação no Windows
+
+Depois de instalar as dependências uma vez, dê duplo clique em
+`iniciar_apresentacao.bat`. O arquivo inicia o broker MQTT pelo Docker e abre
+cinco janelas: três controladores, o campo (sensores e atuadores) e o cliente.
+
+Ele usa `.venv\\Scripts\\python.exe` quando o ambiente virtual existe; caso
+contrário, tenta usar o Python instalado no sistema. Feche as janelas dos
+processos ao terminar e use `docker compose down` para encerrar o broker.
+
+### MQTT Explorer: visualização do broker
+
+O MQTT Explorer é apenas um observador durante a apresentação; o cliente de
+terminal continua sendo o único caminho usado para parar ou rearmar a linha.
+
+1. Com o sistema já iniciado, crie uma conexão.
+2. Informe host `localhost` e porta `1883`.
+3. Não informe usuário ou senha: o broker de simulação é local e anônimo.
+4. Assine `laminacao/#`.
+5. Expanda a árvore: `cadeira` mostra sensores, refrigeração e valores
+   aplicados; `linha` mostra alarme e parada.
+6. Para provocar falha, use o comando documentado na seção Demonstrações,
+   nunca publique manualmente em `laminacao/#`.
+
+O programa é útil para acompanhar os três comandos de réplica, o voto no
+atuador e o valor aplicado, sem alterar a arquitetura do trabalho.
+
 ## Demonstrações
 
 | O que mostrar | Como |
