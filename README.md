@@ -64,7 +64,7 @@ tela como painel de controle:
 | A | Abre o próprio `.bat` no Bloco de Notas: lá estão os erros possíveis e a saída de cada um |
 | 0, Q | Encerra tudo e sai; sai sem fechar nada |
 
-Depois de montar um cenário, o menu mostra o que fazer e o que se espera ver.
+Depois de montar um cenário, o menu mostra o que fazer e o que se espera ver. As opções F, N, D e V contam 5 segundos antes de agir, para dar tempo de trocar para a janela do cliente e ver a mudança.
 
 O menu não opera o cliente. Na janela do `cliente.py`: linha parada = rearme
 pela opção 5 (com a falha encerrada e os seis cilindros em normal); parar a

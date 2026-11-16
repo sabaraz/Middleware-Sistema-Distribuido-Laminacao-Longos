@@ -34,6 +34,8 @@ rem    3. Esquecer a falha ligada e trocar de experimento.
 rem         Nao tem problema: todo cenario (3 a 7) e o R reiniciam o broker
 rem         e os sensores, o que encerra a falha.
 rem    4. Usar F duas vezes. Nao tem efeito: a falha ja esta ligada.
+rem       F, N, D e V contam 5 segundos antes de agir: e de proposito, para
+rem       voce trocar de janela. Nao aperte de novo achando que travou.
 rem    5. Usar D (derrubar) num cenario com replica defeituosa.
 rem         Sobram menos de duas replicas corretas e o cliente mostra
 rem         SEM MAIORIA. E o limite do sistema, nao um defeito. Para voltar,
@@ -89,6 +91,9 @@ set "MQTT_EXPLORER=%LOCALAPPDATA%\Programs\MQTT-Explorer\MQTT Explorer.exe"
 set "CENARIO=nenhum (use 3 a 7, ou R)"
 set "FALHA=desligada"
 set "VAZIAS=0"
+rem Segundos de contagem antes de F, N, D e V: tempo de trocar para a janela
+rem do cliente e ver a mudanca acontecer. Faixa util: 4 a 6.
+set "CONTAGEM=5"
 
 call :achar_python
 if not defined PYTHON_EXE (
@@ -289,6 +294,7 @@ goto voltar_ao_menu
 
 :op_falha_ligar
 echo.
+call :contar "ligar a falha de refrigeracao"
 call :publicar_falha 1
 if errorlevel 1 goto falha_erro
 set "FALHA=LIGADA"
@@ -300,6 +306,7 @@ goto voltar_ao_menu
 
 :op_falha_desligar
 echo.
+call :contar "encerrar a falha de refrigeracao"
 call :publicar_falha 0
 if errorlevel 1 goto falha_erro
 set "FALHA=desligada"
@@ -317,6 +324,7 @@ goto voltar_ao_menu
 echo.
 call :perguntar_controlador
 if errorlevel 1 goto voltar_ao_menu
+call :contar "derrubar o controlador %NUM%"
 call :matar "controlador\.py\W+%NUM%\b"
 call :esperar 2
 echo  Controlador %NUM% derrubado.
@@ -328,6 +336,7 @@ goto voltar_ao_menu
 echo.
 call :perguntar_controlador
 if errorlevel 1 goto voltar_ao_menu
+call :contar "trazer de volta o controlador %NUM%"
 call :matar "controlador\.py\W+%NUM%\b"
 call :esperar 2
 call :abrir_controlador %NUM% correto
@@ -414,6 +423,18 @@ rem Espera N segundos (aproximado). Nao usa "timeout": ver notas no inicio.
 :esperar
 set /a PINGS=%~1+1
 ping -n %PINGS% 127.0.0.1 >nul
+goto :eof
+
+rem Contagem antes de uma acao (%1 = o que vai acontecer). A acao so ocorre
+rem quando a contagem termina: da tempo de trocar para a janela do cliente.
+:contar
+echo  Vou %~1 em %CONTAGEM% segundos.
+echo  Troque agora para a janela do cliente (opcao 2) para ver a mudanca.
+for /l %%S in (%CONTAGEM%,-1,1) do (
+    <nul set /p "=  %%S..."
+    ping -n 2 127.0.0.1 >nul
+)
+echo  agora.
 goto :eof
 
 rem Fecha os processos (python e a janela cmd que os abriu) cuja linha de
