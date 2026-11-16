@@ -49,19 +49,33 @@ py -3 -m venv .venv
 
 ## Início rápido
 
-1. Abra o Docker Desktop e espere ele ficar pronto.
-2. Dê duplo clique em `iniciar_apresentacao.bat`.
+Dê duplo clique em `iniciar_apresentacao.bat`. Ele abre um menu que fica na
+tela como painel de controle:
 
-O arquivo inicia o broker e abre cinco janelas: três controladores, o campo
-(sensores e atuadores) e o cliente do operador. Ele usa o Python de `.venv`
-quando a pasta existe; se não, o Python instalado no sistema.
+| Opção | O que faz |
+|---|---|
+| 1 | Confere Docker, broker e bibliotecas; abre o Docker Desktop e instala as bibliotecas se faltarem |
+| 2 | Abre o MQTT Explorer; se não estiver instalado, oferece a instalação |
+| 3 a 7 | Monta um cenário dos experimentos: fecha tudo, reinicia o broker, apaga `dados` e abre os controladores no modo certo, o campo e o cliente |
+| F, N | Provoca e encerra a falha de refrigeração |
+| D, V | Derruba um controlador e o traz de volta |
+| C, S, B | Reabre o cliente; mostra o que está no ar; mostra o broker em texto |
+| R | Reset total: volta ao cenário 3 a partir de qualquer estado |
+| A | Abre o próprio `.bat` no Bloco de Notas: lá estão os erros possíveis e a saída de cada um |
+| 0, Q | Encerra tudo e sai; sai sem fechar nada |
 
-Se o `.bat` falhar ou alguma janela fechar sozinha, siga o roteiro manual
-abaixo, sem pular passos.
+Depois de montar um cenário, o menu mostra o que fazer e o que se espera ver.
+
+O menu não opera o cliente. Na janela do `cliente.py`: linha parada = rearme
+pela opção 5 (com a falha encerrada e os seis cilindros em normal); parar a
+linha, opção 4; acompanhar o voto, opção 2; comparar as réplicas, opção 6.
+
+Se algo sair do esperado, use a opção R. Se o R falhar, ou se o `.bat` não
+abrir, siga o roteiro manual abaixo, sem pular passos.
 
 ## Roteiro manual
 
-Faz o mesmo que o `.bat`, um passo por vez. Cada passo tem uma conferência:
+Faz o mesmo que o cenário 3 do `.bat`, um passo por vez. Cada passo tem uma conferência:
 só avance quando ela passar. Todos os comandos são dados dentro da pasta do
 projeto.
 
@@ -101,7 +115,9 @@ Use antes da apresentação e sempre que o sistema começar com resíduo.
 1. Fechar as janelas do cliente, do campo e dos três controladores.
 2. `docker compose restart broker`
 3. `rmdir /s /q dados` (no PowerShell: `Remove-Item -Recurse -Force dados`)
-4. Repetir o roteiro manual a partir do passo 2, ou abrir o `.bat` de novo.
+4. Repetir o roteiro manual a partir do passo 2.
+
+No menu, os cenários 3 a 7 e a opção R já fazem a partida limpa.
 
 ### Encerrar
 
@@ -127,7 +143,7 @@ mão conta como voto.
 
 ## Demonstrações
 
-Comandos usados nas demonstrações:
+Comandos usados nas demonstrações, para quando o menu não estiver em uso:
 
 | Ação | Comando |
 |---|---|
@@ -147,13 +163,13 @@ execuções locais registradas no relatório e variam um pouco a cada vez.
 
 | Experimento | Como fazer | O que se espera ver |
 |---|---|---|
-| E1. Operação normal | Sistema iniciado; cliente, opção 2 | Seis cilindros em normal, "(maioria: [1, 2, 3])" |
+| E1. Operação normal | Cenário 3; cliente, opção 2 | Seis cilindros em normal, "(maioria: [1, 2, 3])" |
 | E2. Aquecimento de um cilindro | Provocar a falha; acompanhar pela opção 2; depois da parada, encerrar a falha e rearmar (opção 5) | Alerta em cerca de 2 s, com válvula 2 em 100 e alarme ligado; parada cerca de 33 s depois do alerta; rearme aceito depois que o cilindro esfria |
 | E3. Queda de uma réplica | Fechar o controlador 2; usar as opções 1, 4 e 5 | "controlador-2 SEM RESPOSTA"; tudo aceito com maioria [1, 3]; a ação demora cerca de 4 s |
 | E4. Réplica que reinicia | Abrir de novo o controlador 2; opção 6 | Na janela dele, "recuperacao: ... leituras recebidas"; no cliente, réplicas IGUAIS quando os sensores estão parados |
-| E5. Réplica com valores errados | Partida limpa; controlador 2 em `mentir` (ou `intermitente`); provocar a falha | Cliente aponta o controlador 2 como divergente; válvula e parada aplicadas pelo voto de 1 e 3 |
-| E6, caso 1. Duas réplicas mentindo | Partida limpa; controladores 2 e 3 em `mentir`; provocar a falha | A linha não pára e o painel aceito é o falso: limite do voto 2 de 3 |
-| E6, caso 2. Uma fora e uma mentindo | Partida limpa; controlador 1 normal, 2 em `mentir`, 3 não iniciado | Consultas com "SEM MAIORIA"; a parada pedida é confirmada ao cliente, mas o atuador mantém 0 |
+| E5. Réplica com valores errados | Cenário 4 ou 5 (manual: partida limpa e controlador 2 em `mentir` ou `intermitente`); provocar a falha | Cliente aponta o controlador 2 como divergente; válvula e parada aplicadas pelo voto de 1 e 3 |
+| E6, caso 1. Duas réplicas mentindo | Cenário 6 (manual: partida limpa e controladores 2 e 3 em `mentir`); provocar a falha | A linha não pára e o painel aceito é o falso: limite do voto 2 de 3 |
+| E6, caso 2. Uma fora e uma mentindo | Cenário 7 (manual: partida limpa; controlador 1 normal, 2 em `mentir`, 3 não iniciado) | Consultas com "SEM MAIORIA"; a parada pedida é confirmada ao cliente, mas o atuador mantém 0 |
 
 Para usar um controlador defeituoso, feche a janela do controlador
 correspondente e abra outra com o comando da tabela de ações. Os logs das
@@ -172,7 +188,7 @@ malformada, estão em `experimentos/`.
 | `cliente.py` | Cliente do operador |
 | `iniciar_campo.py` | Inicia os 6 sensores e os 5 atuadores |
 | `iniciar_controladores.py` | Inicia as 3 réplicas numa só janela |
-| `iniciar_apresentacao.bat` | Inicia tudo no Windows, uma janela por processo |
+| `iniciar_apresentacao.bat` | Menu da apresentação no Windows: ambiente, cenários, falha e reset |
 | `docker-compose.yml`, `mosquitto/` | Broker MQTT |
 | `experimentos/` | Logs das execuções citadas no relatório |
 | `docs/` | Relatório e imagens |

@@ -1,0 +1,2 @@
+# O .bat precisa de fim de linha do Windows (CRLF) em qualquer forma de baixar.
+*.bat -text
